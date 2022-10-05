@@ -2,6 +2,6 @@
 """
 Created on Wed Oct  5 09:45:34 2022
 
-@author: jeanv
+@author: jean & valentin
 """
 
