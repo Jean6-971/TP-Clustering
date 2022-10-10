@@ -23,7 +23,7 @@ f0 = [f[0] for f in datanp]
 f1 = [f[1] for f in datanp]
 
 print (" Dendrogramme ’single ’ donnees initiales ")
-linked_mat = shc.linkage(datanp, 'single')
+linked_mat = shc.linkage(datanp, 'average')
 plt.figure(figsize = (12, 12))
 shc.dendrogram(linked_mat,
 orientation = 'top',
