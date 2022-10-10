@@ -14,7 +14,7 @@ from sklearn import cluster
 # Donnees dans datanp
 
 path = "./artificial/"
-databrut = arff.loadarff(open(path+"hypercube.arff", "r"))
+databrut = arff.loadarff(open(path+"R15.arff", "r"))
 datanp = [[x[0],x[1]] for x in databrut [0]]
 
 f0 = [f[0] for f in datanp]
@@ -29,14 +29,16 @@ distance_sort = 'descending',
 show_leaf_counts = False)
 plt.show()
 
-# set distance_threshold (0 ensures we compute the full tree )
-tps1 = time.time()
-model = cluster.AgglomerativeClustering(distance_threshold = 0.11, linkage ='single', n_clusters = None)
-model = model.fit(datanp)
-tps2 = time.time()
-labels = model.labels_
-k = model.n_clusters_
-leaves = model.n_leaves_
+range_threshold = range(0,1000)
+for distance_threshold in range_threshold :
+    # set distance_threshold (0 ensures we compute the full tree )
+    tps1 = time.time()
+    model = cluster.AgglomerativeClustering(distance_threshold/100, linkage ='single', n_clusters = None)
+    model = model.fit(datanp)
+    tps2 = time.time()
+    labels = model.labels_
+    k = model.n_clusters_
+    leaves = model.n_leaves_
 
 # Affichage clustering
 plt.scatter(f0, f1, c=labels, s=8)
