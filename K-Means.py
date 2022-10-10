@@ -1,8 +1,9 @@
+import numpy as np
 import matplotlib.pyplot as plt
 import time
 from scipy.io import arff
 from sklearn import cluster
-from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score
+from sklearn.metrics import silhouette_samples, silhouette_score, davies_bouldin_score, calinski_harabasz_score
 
 
 # Parser un fichier de donnees au format arff
