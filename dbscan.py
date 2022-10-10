@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 from scipy.io import arff
 import time
 from sklearn import cluster
+from sklearn.neighbors import NearestNeighbors
+import numpy as np
 
 # Donnees dans datanp
 
@@ -19,6 +21,22 @@ datanp = [[x[0],x[1]] for x in databrut [0]]
 
 f0 = [f[0] for f in datanp]
 f1 = [f[1] for f in datanp]
+
+
+# Distances k plus proches voisins
+# Donnees dans X
+k=5
+neigh = NearestNeighbors(n_neighbors= k)
+neigh.fit(datanp)
+distances, indices = neigh.kneighbors(datanp)
+
+# retirer le point " origine "
+newDistances = np.asarray([np.average(distances[i][1:]) for i in range (0, distances.shape[0])])
+trie = np.sort(newDistances)
+plt.title(" Plus proches voisins (5)")
+plt.plot(trie);
+plt.show()
+
 
 
 tps1 = time.time()
