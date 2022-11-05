@@ -8,9 +8,10 @@ from scipy.io import arff
 import time
 from sklearn import cluster
 from sklearn.metrics import silhouette_score
+import hdbscan
 
 path = "./artificial/"
-dataset_name = "hypercube"
+dataset_name = "smile1"
 databrut = arff.loadarff(open(path + dataset_name+".arff", "r"))
 datanp = [[x[0], x[1]] for x in databrut[0]]
 
@@ -26,7 +27,7 @@ for mins in min_samples:
     for eps in distances[:]:
         # set distance_threshold (0 ensures we compute the full tree )
         tps1 = time.time()
-        model = cluster.DBSCAN(eps=eps, min_samples=mins)
+        #model = hdbscan.HDBSCAN(eps=eps, min_samples=mins)
         model = model.fit(datanp)
         tps2 = time.time()
         labels = model.labels_
@@ -34,8 +35,8 @@ for mins in min_samples:
             len(labels)))
         try:
             _ = silhouette_score(datanp, labels[:])
-            # if _ < 0 :
-            #     raise ArithmeticError
+            if _ < 0 :
+                raise ArithmeticError
         except:
             _ = 0
         silhouette.append(_)
@@ -43,5 +44,5 @@ for mins in min_samples:
     plt.plot(distances, silhouette, label="min_s=" + str(mins))
 
 plt.legend()
-plt.title("DBSCAN Score Silhouette en fonction eps\nDataset: "+dataset_name+".arff")
+plt.title("Score Silhouette en fonction 0.1 < eps < 0.25 \nDataset: "+dataset_name+".arff")
 plt.show()
