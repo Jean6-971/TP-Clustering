@@ -21,41 +21,13 @@ import hdbscan
 # Donnees dans datanp
 
 path = './dataset-rapport/'
-filename = "x1.txt"
+filename = "x2.txt"
 databrut = pd.read_csv(path+filename, sep = " ", encoding = "ISO-8859-1", skipinitialspace=True)
 data = databrut
 datanp = databrut.to_numpy()
 
 f0 = [f[0] for f in datanp]
 f1 = [f[1] for f in datanp]
-
-
-# =============================================================================
-# path = "./artificial/"
-# databrut = arff.loadarff(open(path+"long2.arff", "r"))
-# datanp = [[x[0],x[1]] for x in databrut [0]]
-# 
-# f0 = [f[0] for f in datanp]
-# f1 = [f[1] for f in datanp]
-# =============================================================================
-
-# range_min_samples = range(2,50)
-# for min_samples in range_min_samples :
-#     # Distances k plus proches voisins
-#     # Donnees dans X
-#     k=min_samples
-#     neigh = NearestNeighbors(n_neighbors= k)
-#     neigh.fit(datanp)
-#     distances, indices = neigh.kneighbors(datanp)
-
-#     # retirer le point " origine "
-#     newDistances = np.asarray([np.average(distances[i][1:]) for i in range (0, distances.shape[0])])
-#     trie = np.sort(newDistances)
-#     title=" Plus proches voisins (", min_samples, ")"
-#     plt.title(title)
-#     plt.plot(trie);
-#     plt.show()
-
 
 ########################################
 

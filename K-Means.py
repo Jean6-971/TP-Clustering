@@ -12,7 +12,9 @@ from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_har
 # numero de cluster. On retire cette information
 
 path = "./artificial/"
-databrut = arff.loadarff(open(path + "smile1.arff", "r"))
+name = "hypercube"
+
+databrut = arff.loadarff(open(path + name+".arff", "r"))
 datanp = [[x[0], x[1]] for x in databrut[0]]
 
 # Affichage en 2D
@@ -27,12 +29,11 @@ plt.scatter(f0, f1, s=8)
 plt.title("Donnees initiales")
 plt.show()
 
-silhouette = []
-davies_bouldin = []
-calinski_harabasz = []
-
+silhouette, davies_bouldin, calinski_harabasz = [],[],[] 
+silhouette_t, davies_bouldin_t, calinski_harabasz_t = [],[],[]
 # Détermination du nombre de clusters par coefficient de silhouette
 range_clust = range(2, 10)
+calinski_scale = 7000
 for n_clusters in range_clust:
     print("Appel KMeans pour une valeur fixee de k ")
     tps1 = time.time()
@@ -48,14 +49,17 @@ for n_clusters in range_clust:
     silhouette.append(silhouette_score(datanp, labels))
     tps2 = time.time()
     tp_silhouette = tps2 - tps1
+    silhouette_t.append(tp_silhouette)
     tps1 = time.time()
     davies_bouldin.append(davies_bouldin_score(datanp, labels))
     tps2 = time.time()
     tp_bouldin = tps2 - tps1
+    davies_bouldin_t.append(tp_bouldin)
     tps1 = time.time()
-    calinski_harabasz.append(calinski_harabasz_score(datanp, labels) / 7000)
+    calinski_harabasz.append(calinski_harabasz_score(datanp, labels) / calinski_scale)
     tps2 = time.time()
     tp_calinski = tps2 - tps1
+    calinski_harabasz_t.append(tp_calinski)
     iteration = model.n_iter_
     print("nb clusters =", n_clusters, ", nb iter =", iteration,
           ",runtime kmeans = ", round((tp_kmeans) * 1000, 2), "ms",
@@ -63,8 +67,26 @@ for n_clusters in range_clust:
           ",runtime bouldin = ", round((tp_bouldin) * 1000, 2), "ms",
           ",runtime calinski = ", round((tp_calinski) * 1000, 2), "ms", )
 print(silhouette)
-plt.plot(range_clust, silhouette, 'r')
-plt.plot(range_clust, davies_bouldin, 'g')
-plt.plot(range_clust, calinski_harabasz, 'b')
-
+plt.title("Dataset "+name)
+plt.plot(range_clust, silhouette)
+plt.plot(range_clust, calinski_harabasz)
+plt.plot(range_clust, davies_bouldin)
+plt.xlabel("n_clusters")
+plt.legend(["Silhouette (avg. "+str(round( (sum(silhouette_t)/len(range_clust)) * 1000, 2))+"ms)",
+            "Calinski-Harabasz (1/"+str(calinski_scale)+") (avg. "+str(round( (sum(calinski_harabasz_t)/len(range_clust)) * 1000, 2))+"ms)",
+            "Davies-Bouldin (avg. "+str(round( (sum(davies_bouldin_t)/len(range_clust)) * 1000, 2))+"ms)"])
 plt.show()
+
+n_clusters = 4
+tps1 = time.time()
+clusterer = cluster.KMeans(n_clusters=n_clusters)
+clusterer.fit(datanp)
+labels = clusterer.labels_
+tps2 = time.time()
+
+# Affichage clustering
+# =============================================================================
+plt.scatter(f0, f1, c=labels, s=8)
+plt.title("Dataset "+name+"\nK-Mean (n_clusters="+str(n_clusters)+") en "+ str( round ((tps2 - tps1)*1000, 2))+ "ms")
+plt.show()
+print (" runtime = ", round ((tps2 - tps1)*1000, 2), "ms")

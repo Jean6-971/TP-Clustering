@@ -28,7 +28,7 @@ print(len(datanp))
 for min in mins:
     # set distance_threshold (0 ensures we compute the full tree )
     tps1 = time.time()
-    model = hdbscan.HDBSCAN(min_cluster_size=min,metric="")
+    model = hdbscan.HDBSCAN(min_cluster_size=min)
     model = model.fit(datanp)
     tps2 = time.time()
     labels = model.labels_
