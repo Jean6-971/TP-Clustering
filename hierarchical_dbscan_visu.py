@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Oct 10 11:03:24 2022
-
 @author: jeanv
 """
 
@@ -18,7 +17,7 @@ import hdbscan
 # Donnees dans datanp
 
 path = "./artificial/"
-databrut = arff.loadarff(open(path+"long2.arff", "r"))
+databrut = arff.loadarff(open(path+"hypercube.arff", "r"))
 datanp = [[x[0],x[1]] for x in databrut [0]]
 
 f0 = [f[0] for f in datanp]
