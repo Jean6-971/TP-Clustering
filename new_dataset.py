@@ -121,9 +121,9 @@ f1 = [f[1] for f in datanp]
 
 
 # =============================================================================
-# min_samples = [k for k in range(60, 65, 1)]
+# min_samples = [k for k in range(60, 65, 1)] # Changer la plage de min samples
 # for mins in min_samples:
-#     mins_clus = [k  for k in range(2, 70, 1)]
+#     mins_clus = [k  for k in range(2, 70, 1)] # Changer la plage de min cluster
 #     silhouette = []
 #     print(len(datanp))
 #     for min in mins_clus:
