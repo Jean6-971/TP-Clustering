@@ -14,7 +14,7 @@ from sklearn.metrics.pairwise import euclidean_distances
 # numero de cluster. On retire cette information
 
 path = "./artificial/"
-name = "twenty"
+name = "twodiamonds"
 
 databrut = arff.loadarff(open(path + name+".arff", "r"))
 datanp = [[x[0], x[1]] for x in databrut[0]]
@@ -31,49 +31,50 @@ plt.scatter(f0, f1, s=8)
 plt.title("Donnees initiales")
 plt.show()
 
-silhouette, davies_bouldin, calinski_harabasz = [],[],[] 
-silhouette_t, davies_bouldin_t, calinski_harabasz_t = [],[],[]
+silhouette, silhouette_t, silhouette_med, silhouette_med_t = [],[],[],[]
 # Détermination du nombre de clusters par coefficient de silhouette
-range_clust = range(2, 10)
-calinski_scale = 7000
+range_clust = range(2, 20)
+distmatrix = euclidean_distances( datanp )
 for n_clusters in range_clust:
-    print("Appel KMeans pour une valeur fixee de k ")
+    # print("Appel KMedoid pour une valeur fixee de k ")
     tps1 = time.time()
-    distmatrix = euclidean_distances( datanp )
     model = kmedoids.fasterpam( distmatrix , n_clusters )
     tps2 = time.time()
-    labels = model.labels
     tp_kmedoid = tps2 - tps1
-    # The silhouette_score gives the average value for all the samples.
-    # This gives a perspective into the density and separation of the formed
-    # clusters
+    labels = model.labels
+    
     tps1 = time.time()
-    silhouette.append(silhouette_score(datanp, labels))
+    _ = silhouette_score(datanp, labels)
     tps2 = time.time()
-    tp_silhouette = tps2 - tps1
-    silhouette_t.append(tp_silhouette)
-    iteration = model.n_iter
-    print("nb clusters =", n_clusters, ", nb iter =", iteration,
-          ",runtime kmedoid = ", round((tp_kmedoid) * 1000, 2), "ms",
-          ",runtime silhouette = ", round((tp_silhouette) * 1000, 2), "ms" )
-print(silhouette)
-plt.title("Dataset "+name)
+    silhouette.append(_)
+    silhouette_t.append(tps2 - tps1)
+    
+    # Evaluation du la metrique embarquée dans kmedoid
+    tps1 = time.time()
+    _ = kmedoids.medoid_silhouette(distmatrix, model.medoids)
+    tps2 = time.time()
+    silhouette_med.append(_)
+    silhouette_med_t.append(tps2 - tps1)
+
+plt.title("Dataset "+name+"\nsilhouette (sklearn) vs medoid silhouette (kmedoid)")
 plt.plot(range_clust, silhouette)
+plt.plot(range_clust, [s[0] for s in silhouette_med])
 plt.xlabel("n_clusters")
-plt.legend(["Silhouette (avg. "+str(round( (sum(silhouette_t)/len(range_clust)) * 1000, 2))+"ms)"])
+plt.legend(["Silhouette (avg. "+str(round( (sum(silhouette_t)/len(range_clust)) * 1000, 2))+"ms)",
+            "Med. Silhouette (avg. "+str(round( (sum(silhouette_med_t)/len(range_clust)) * 1000, 2))+"ms)"])
 plt.show()
 
-n_clusters = 20
-tps1 = time.time()
-distmatrix = euclidean_distances( datanp )
-model = kmedoids.fasterpam( distmatrix , n_clusters )
-labels = model.labels
-tps2 = time.time()
+# n_clusters = 2
+# tps1 = time.time()
+# distmatrix = euclidean_distances( datanp )
+# model = kmedoids.fasterpam( distmatrix , n_clusters )
+# labels = model.labels
+# tps2 = time.time()
 
-# Affichage clustering
-# =============================================================================
-plt.scatter(f0, f1, c=labels, s=8)
-plt.title("Dataset "+name+"\nK-Mean (n_clusters="+str(n_clusters)+")")
-plt.show()
-print (" runtime = ", round ((tps2 - tps1)*1000, 2), "ms")
+# # Affichage clustering
+# # =============================================================================
+# plt.scatter(f0, f1, c=labels, s=8)
+# plt.title("Dataset "+name+"\nK-Medoid (n_clusters="+str(n_clusters)+") en "+ str( round ((tps2 - tps1)*1000, 2))+ "ms")
+# plt.show()
+# print (" runtime = ", round ((tps2 - tps1)*1000, 2), "ms")
 

@@ -12,7 +12,7 @@ from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_har
 # numero de cluster. On retire cette information
 
 path = "./artificial/"
-name = "hypercube"
+name = "twodiamonds"
 
 databrut = arff.loadarff(open(path + name+".arff", "r"))
 datanp = [[x[0], x[1]] for x in databrut[0]]
@@ -77,7 +77,7 @@ plt.legend(["Silhouette (avg. "+str(round( (sum(silhouette_t)/len(range_clust)) 
             "Davies-Bouldin (avg. "+str(round( (sum(davies_bouldin_t)/len(range_clust)) * 1000, 2))+"ms)"])
 plt.show()
 
-n_clusters = 4
+n_clusters = 2
 tps1 = time.time()
 clusterer = cluster.KMeans(n_clusters=n_clusters)
 clusterer.fit(datanp)
