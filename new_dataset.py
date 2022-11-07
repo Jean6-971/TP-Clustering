@@ -16,7 +16,7 @@ import kmedoids
 # Donnees dans datanp
 
 path = './dataset-rapport/'
-name = "zz2"
+name = "zz1"
 
 databrut = pd.read_csv(path+name+".txt", sep = " ", encoding = "ISO-8859-1", skipinitialspace=True)
 datanp = databrut.to_numpy()
@@ -158,7 +158,7 @@ f1 = [f[1] for f in datanp]
 # k-Means
 tps1_kmeans = time.time()
 # Changez les paramètres de la fonction ci-dessous
-model_kmeans = cluster.KMeans(n_clusters = 5, init='k-means++')
+model_kmeans = cluster.KMeans(n_clusters = 8, init='k-means++')
 model_kmeans.fit(datanp)
 tps2_kmeans = time.time()
 tps_kmeans = tps2_kmeans-tps1_kmeans
@@ -171,7 +171,7 @@ score_davies_bouldin_kmeans = davies_bouldin_score(datanp, labels_kmeans)
 tps1_kmedoids = time.time()
 distmatrix = euclidean_distances(datanp)
 # Changez les paramètres de la fonction ci-dessous
-model_kmedoids = kmedoids.fasterpam(distmatrix, 5)
+model_kmedoids = kmedoids.fasterpam(distmatrix, 8)
 tps2_kmedoids = time.time()
 tps_kmedoids = tps2_kmedoids-tps1_kmedoids
 labels_kmedoids = model_kmedoids.labels
@@ -182,7 +182,7 @@ score_davies_bouldin_kmedoids = davies_bouldin_score(datanp, labels_kmedoids)
 # Agglo
 tps1_agglo = time.time()
 # Changez les paramètres de la fonction ci-dessous
-model_agglo = cluster.AgglomerativeClustering(n_clusters = 5,
+model_agglo = cluster.AgglomerativeClustering(n_clusters = 8,
                                               linkage = 'average')
 model_agglo.fit(datanp)
 tps2_agglo = time.time()
@@ -195,7 +195,7 @@ score_davies_bouldin_agglo = davies_bouldin_score(datanp, labels_agglo)
 # DBSCAN
 tps1_dbscan = time.time()
 # Changez les paramètres de la fonction ci-dessous
-model_dbscan = cluster.DBSCAN(eps = 1, min_samples = 1)
+model_dbscan = cluster.DBSCAN(eps = 4.473, min_samples = 1)
 model_dbscan.fit(datanp)
 tps2_dbscan = time.time()
 tps_dbscan = tps2_dbscan-tps1_dbscan
@@ -207,8 +207,8 @@ score_davies_bouldin_dbscan = davies_bouldin_score(datanp, labels_dbscan)
 # HDBSCAN
 tps1_hdbscan = time.time()
 # Changez les paramètres de la fonction ci-dessous
-model_hdbscan = hdbscan.HDBSCAN(min_cluster_size = 66,
-                                min_samples = 62)
+model_hdbscan = hdbscan.HDBSCAN(min_cluster_size = 7,
+                                min_samples = 1)
 model_hdbscan.fit(datanp)
 tps2_hdbscan = time.time()
 tps_hdbscan = tps2_hdbscan-tps1_hdbscan
